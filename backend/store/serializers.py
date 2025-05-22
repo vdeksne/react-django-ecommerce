@@ -66,18 +66,16 @@ class ColorSerializer(serializers.ModelSerializer):
 # Define a serializer for the Product model
 class ProductSerializer(serializers.ModelSerializer):
     # Serialize related Category, Tag, and Brand models
-    # category = CategorySerializer(many=True, read_only=True)
-    # tags = TagSerializer(many=True, read_only=True)
     gallery = GallerySerializer(many=True, read_only=True)
     color = ColorSerializer(many=True, read_only=True)
     size = SizeSerializer(many=True, read_only=True)
     specification = SpecificationSerializer(many=True, read_only=True)
-    # rating = serializers.IntegerField(required=False)
     
-    # specification = SpecificationSerializer(many=True, required=False)
-    # color = ColorSerializer(many=True, required=False)
-    # size = SizeSerializer(many=True, required=False)
-    # gallery = GallerySerializer(many=True, required=False, read_only=True)
+    # Add method fields
+    product_rating = serializers.SerializerMethodField()
+    rating_count = serializers.SerializerMethodField()
+    order_count = serializers.SerializerMethodField()
+    get_precentage = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -103,7 +101,6 @@ class ProductSerializer(serializers.ModelSerializer):
             "views",
             "orders",
             "saved",
-            # "rating",
             "vendor",
             "sku",
             "pid",
@@ -115,9 +112,21 @@ class ProductSerializer(serializers.ModelSerializer):
             "color",
             "product_rating",
             "rating_count",
-            'order_count',
+            "order_count",
             "get_precentage",
         ]
+    
+    def get_product_rating(self, obj):
+        return obj.product_rating()
+    
+    def get_rating_count(self, obj):
+        return obj.rating_count()
+    
+    def get_order_count(self, obj):
+        return obj.order_count()
+    
+    def get_get_precentage(self, obj):
+        return obj.get_precentage()
     
     def __init__(self, *args, **kwargs):
         super(ProductSerializer, self).__init__(*args, **kwargs)

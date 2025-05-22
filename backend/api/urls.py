@@ -28,6 +28,7 @@ urlpatterns = [
     path('category/', store_views.CategoryListView.as_view(), name='category'),
     path('brand/', store_views.BrandListView.as_view(), name='brand'),
     path('products/', store_views.ProductListView.as_view(), name='products'),
+    path('products/create/', store_views.ProductCreateView.as_view(), name='product-create'),
     path('featured-products/', store_views.FeaturedProductListView.as_view(), name='featured-products'),
     path('products/<slug:slug>/', store_views.ProductDetailView.as_view(), name='brand'),
     path('cart-view/', store_views.CartApiView.as_view(), name='cart-view'),
@@ -43,6 +44,7 @@ urlpatterns = [
     path('create-review/', store_views.ReviewRatingAPIView.as_view(), name='create-review'),
     path('reviews/<product_id>/', store_views.ReviewListView.as_view(), name='create-review'),
     path('search/', store_views.SearchProductsAPIView.as_view(), name='search'),
+    path('address/', store_views.AddressListView.as_view(), name='address'),
 
     # Payment
     # path('stripe-checkout/<order_oid>/', store_views.StripeCheckoutView.as_view(), name='stripe-checkout'),

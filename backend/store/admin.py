@@ -42,7 +42,11 @@ class ProductAdminForm(forms.ModelForm):
         model = Product
         fields = '__all__'
 
-    vendor = forms.ModelChoiceField(queryset=Vendor.objects.filter(user__is_staff=True))
+    vendor = forms.ModelChoiceField(
+        queryset=Vendor.objects.filter(user__is_staff=True),
+        required=False,
+        empty_label="No Vendor"
+    )
 
 class ProductAdmin(ImportExportModelAdmin):
     inlines = [ProductImagesAdmin, SpecificationAdmin, ColorAdmin, SizeAdmin]

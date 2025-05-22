@@ -76,6 +76,13 @@ class ProductListView(generics.ListAPIView):
     queryset = Product.objects.filter(status="published")
     permission_classes = (AllowAny,)
 
+class ProductCreateView(generics.CreateAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
+
 class ProductDetailView(generics.RetrieveAPIView):
     serializer_class = ProductSerializer
 
@@ -657,4 +664,14 @@ class SearchProductsAPIView(generics.ListAPIView):
 
         products = Product.objects.filter(status="published", title__icontains=query)
         return products
+
+class AddressListView(generics.ListCreateAPIView):
+    serializer_class = AddressSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Address.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
        
