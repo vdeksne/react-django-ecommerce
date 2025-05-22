@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'jazzmin',
+    'drf_yasg',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,7 +53,7 @@ INSTALLED_APPS = [
         # Third Party Apps
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-    # 'corsheaders',
+    'corsheaders',
     # 'import_export',
     # 'anymail',
     # 'storages',
@@ -68,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -142,6 +144,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 
@@ -290,3 +294,5 @@ SIMPLE_JWT = {
 
     'JTI_CLAIM': 'jti',
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
