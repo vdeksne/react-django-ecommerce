@@ -7,7 +7,7 @@ import { CartContext } from "../plugin/Context";
 import { useNavigate } from "react-router-dom";
 
 function StoreHeader() {
-  const cartCount = useContext(CartContext);
+  const [cartCount] = useContext(CartContext);
   const [search, setSearch] = useState("");
 
   const [isLoggedIn, user] = useAuthStore((state) => [

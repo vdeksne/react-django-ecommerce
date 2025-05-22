@@ -2,8 +2,9 @@
 import axios from "axios";
 import { API_BASE_URL } from "./constants";
 import Swal from "sweetalert2";
+import Cookies from "js-cookie";
 
-// Create an instance of Axios and store it in the 'apiInstance' variable. This instance will have specific configuration options.
+// Create an instance of Axios for authenticated requests
 const apiInstance = axios.create({
   // Set the base URL for this instance. All requests made using this instance will have this URL as their starting point.
   baseURL: API_BASE_URL,
@@ -18,7 +19,32 @@ const apiInstance = axios.create({
   },
 });
 
-// Export the 'apiInstance' so that it can be used in other parts of the codebase. Other modules can import and use this Axios instance for making API requests.
+// Create an instance of Axios for public requests
+const publicApiInstance = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 100000,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+});
+
+// Add a request interceptor to include the authentication token
+apiInstance.interceptors.request.use(
+  (config) => {
+    const token = Cookies.get("access_token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Export both instances
+export { publicApiInstance };
 export default apiInstance;
 
 export async function sendPasswordResetEmail(email) {

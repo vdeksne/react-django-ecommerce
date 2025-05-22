@@ -15,7 +15,7 @@ function Dashboard() {
       ) : (
         <div>
           Home Page
-          <Link to={"/register"} className="btn btn-primary">
+          <Link to={"/register"} className="btn btn-primary me-2">
             Register
           </Link>
           <br />

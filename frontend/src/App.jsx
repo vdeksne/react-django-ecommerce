@@ -12,6 +12,7 @@ import Register from "./views/auth/Register"; // Importing the 'Register' compon
 import Dashboard from "./views/auth/Dashboard";
 import StoreHeader from "./views/base/StoreHeader";
 import StoreFooter from "./views/base/StoreFooter";
+import Products from "./views/shop/Products"; // Add Products import
 // import ProductDetail from "./views/shop/ProductDetail";
 // import Cart from "./views/shop/Cart";
 // import Checkout from "./views/shop/Checkout";
@@ -47,9 +48,12 @@ import CreatePassword from "./views/auth/CreatePassword";
 // import CreatePassword from "./views/auth/CreatePassword";
 // import VendorRegister from "./views/vendor/VendorRegister";
 // import OrderItemDetail from "./views/vendor/OrderItemDetail";
+import { useState } from "react";
+import { CartContext } from "./views/plugin/Context";
+
 function App() {
   // Define the main 'App' component.
-  // const [cartCount, setCartCount] = useState();
+  const [cartCount, setCartCount] = useState(0);
   // const userData = UserData();
   // let cart_id = CartID();
   // const axios = apiInstance;
@@ -64,19 +68,22 @@ function App() {
   // }, []);
 
   return (
-    <BrowserRouter>
-      <StoreHeader />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/create-new-password" element={<CreatePassword />} />
-      </Routes>
-      <StoreFooter />
-    </BrowserRouter>
+    <CartContext.Provider value={[cartCount, setCartCount]}>
+      <BrowserRouter>
+        <StoreHeader />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/create-new-password" element={<CreatePassword />} />
+        </Routes>
+        <StoreFooter />
+      </BrowserRouter>
+    </CartContext.Provider>
   );
 }
 
