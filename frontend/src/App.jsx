@@ -10,8 +10,8 @@ import Logout from "./views/auth/Logout"; // Importing the 'Logout' component.
 // import Private from "./views/auth/private"; // Importing the 'Private' component.
 import Register from "./views/auth/Register"; // Importing the 'Register' component.
 import Dashboard from "./views/auth/Dashboard";
-// import StoreHeader from "./views/base/StoreHeader";
-// import StoreFooter from "./views/base/StoreFooter";
+import StoreHeader from "./views/base/StoreHeader";
+import StoreFooter from "./views/base/StoreFooter";
 // import ProductDetail from "./views/shop/ProductDetail";
 // import Cart from "./views/shop/Cart";
 // import Checkout from "./views/shop/Checkout";
@@ -43,7 +43,8 @@ import UserData from "./views/plugin/UserData";
 // import Shop from "./views/vendor/Shop";
 // import Search from "./views/shop/Search";
 import ForgotPassword from "./views/auth/ForgotPassword";
-// import CreatePassword from "./views/auth/createPassword";
+import CreatePassword from "./views/auth/CreatePassword";
+// import CreatePassword from "./views/auth/CreatePassword";
 // import VendorRegister from "./views/vendor/VendorRegister";
 // import OrderItemDetail from "./views/vendor/OrderItemDetail";
 function App() {
@@ -64,6 +65,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <StoreHeader />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -71,7 +73,9 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         <Route path="/" element={<Home />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/create-new-password" element={<CreatePassword />} />
       </Routes>
+      <StoreFooter />
     </BrowserRouter>
   );
 }

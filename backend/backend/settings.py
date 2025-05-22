@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from environs import Env
+import os
+import dj_database_url
+
+env = Env()
+env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +27,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-svn(^eg^!76&3uq8yyc$ocm*92syyg##ihk395puys1t+1$rc5'
+SECRET_KEY = 'django-insecure-b*tuoe%^o+=^35$0fufrm=oamh^(o0tabn39(7ni12(i-oup+4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["website-domain.com", "127.0.0.1", "localhost"]
+CSRF_TRUSTED_ORIGINS = ['https://website-domain.com', 'https://127.0.0.1']
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 
 # Application definition
@@ -34,6 +42,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'jazzmin',
     'drf_yasg',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,35 +50,36 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+
     # Custom Apps
     'userauths',
     'store',
     'vendor',
-    'customer',  
+    'customer',
     'addon',
     'api',
-    'shortuuidfield',
 
-        # Third Party Apps
+    # Third Party Apps
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
-    # 'import_export',
-    # 'anymail',
-    # 'storages',
+    'import_export',
+    'anymail',
+    'storages',
+
+
 ]
-
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # Add Cors Middle ware here
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -77,7 +87,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -102,6 +112,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation
@@ -145,8 +158,31 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-CORS_ALLOW_ALL_ORIGINS = True
 
+# AWS Configs
+# AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+
+# AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+
+# AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
+
+# AWS_S3_FILE_OVERWRITE = False
+
+# AWS_DEFAULT_ACL = 'public-read'
+
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
+# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+# AWS_LOCATION = 'static'
+
+# STATIC_LOCATION = 'static'
+
+# STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
 
 
 # Default primary key field type
@@ -156,15 +192,77 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'userauths.User'
 
+# Site URL
+SITE_URL = env("SITE_URL")
+
+# Stripe API Keys
+STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY")
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+
+# Paypal API Keys
+PAYPAL_CLIENT_ID = env('PAYPAL_CLIENT_ID')
+PAYPAL_SECRET_ID = env('PAYPAL_SECRET_ID')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.environ.get("MAILGUN_API_KEY"),
+    "MAILGUN_SENDER_DOMAIN": os.environ.get("MAILGUN_SENDER_DOMAIN"),
+}
+
+FROM_EMAIL = " desphixs@gmail.com"
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+DEFAULT_FROM_EMAIL = " desphixs@gmail.com"
+SERVER_EMAIL = " desphixs@gmail.com"
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
+
+    'ALGORITHM': 'HS256',
+
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
 
 JAZZMIN_SETTINGS = {
-    "site_title": "Pax",
-    "site_header": "Pax",
-    "site_brand": "Cool stuff",
-    # "site_icon": "images/favicon.ico",
-    # "site_logo": "images/logos/logo.jpg",
-    "welcome_sign": "Welcome To Pax",
-    "copyright": "All right reserved to Pax",
+    "site_title": "Desphixs",
+    "site_header": "Desphixs",
+    "site_brand": "Modern Marketplace ",
+    "site_icon": "images/favicon.ico",
+    "site_logo": "images/logos/logo.jpg",
+    "welcome_sign": "Welcome To Desphixs",
+    "copyright": "All right reserved to Desphixs",
     "user_avatar": "images/photos/logo.jpg",
     "topmenu_links": [
         {"name": "Dashboard", "url": "home",
@@ -260,39 +358,3 @@ JAZZMIN_UI_TWEAKS = {
         "success": "btn-success"
     }
 }
-
-# REST Framework settings
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
-
-# JWT settings
-from datetime import timedelta
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': False,
-
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
-
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-
-    'JTI_CLAIM': 'jti',
-}
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -16,7 +16,6 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.views import APIView
 
 # Others
 import json
@@ -111,6 +110,8 @@ def generate_numeric_otp(length=7):
         otp = ''.join([str(random.randint(0, 9)) for _ in range(length)])
         return otp
 
+from rest_framework.views import APIView
+
 class PasswordEmailVerify(APIView):
     permission_classes = (AllowAny,)
     serializer_class = UserSerializer
@@ -118,16 +119,13 @@ class PasswordEmailVerify(APIView):
     def post(self, request):
         email = request.data.get('email')
         if not email:
-            return Response({"error": "Email is required."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Email is required in the request body."}, status=status.HTTP_400_BAD_REQUEST)
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             return Response({"error": "User with this email does not exist."}, status=status.HTTP_404_NOT_FOUND)
         # TODO: Add your password reset logic here (e.g., send email)
         return Response({"message": "Password reset email sent."}, status=status.HTTP_200_OK)
-
-    def get(self, request):
-        return Response({"error": "GET method not allowed. Use POST with email in body."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 class PasswordChangeView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
@@ -146,21 +144,14 @@ class PasswordChangeView(generics.CreateAPIView):
         print("reset_token ======", reset_token)
         print("password ======", password)
 
-        user = User.objects.get(id=uidb64, otp=otp)
-        if user:
-            user.set_password(password)
-            user.otp = ""
-            user.reset_token = ""
-            user.save()
+        try:
+            user = User.objects.get(id=uidb64, otp=otp)
+        except User.DoesNotExist:
+            return Response({"error": "Invalid or expired password reset link."}, status=status.HTTP_404_NOT_FOUND)
 
-            
-            return Response( {"message": "Password Changed Successfully"}, status=status.HTTP_201_CREATED)
-        else:
-            return Response( {"message": "An Error Occured"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        user.set_password(password)
+        user.otp = ""
+        user.reset_token = ""
+        user.save()
 
-class PasswordResetView(APIView):
-    def post(self, request):
-        email = request.data.get('email')
-        # Implement your password reset logic here
-        # For now, just return a success response
-        return Response({"message": f"Password reset email sent to {email}"}, status=status.HTTP_200_OK)
+        return Response({"message": "Password Changed Successfully"}, status=status.HTTP_201_CREATED)

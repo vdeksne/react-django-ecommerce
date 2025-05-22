@@ -15,8 +15,13 @@ function Dashboard() {
       ) : (
         <div>
           Home Page
-          <Link to={"/register"}>Register</Link>
-          <Link to={"/login"}>Login</Link>
+          <Link to={"/register"} className="btn btn-primary">
+            Register
+          </Link>
+          <br />
+          <Link to={"/login"} className="btn btn-success">
+            Login
+          </Link>
         </div>
       )}
     </>
