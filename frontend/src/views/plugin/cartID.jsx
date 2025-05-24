@@ -5,26 +5,26 @@ import { useState, useEffect } from "react";
  * @returns {string} The cart ID
  */
 const CartID = () => {
-  const [cartId, setCartId] = useState("");
-
-  useEffect(() => {
+  // Initialize with a default cart ID
+  const [cartId, setCartId] = useState(() => {
     // Try to get existing cart ID from localStorage
     const existingCartId = localStorage.getItem("cart_id");
-
     if (existingCartId) {
+      return existingCartId;
+    }
+    // Generate a new cart ID if none exists
+    const newCartId = "cart_" + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("cart_id", newCartId);
+    return newCartId;
+  });
+
+  // Keep the useEffect for any future updates
+  useEffect(() => {
+    const existingCartId = localStorage.getItem("cart_id");
+    if (existingCartId && existingCartId !== cartId) {
       setCartId(existingCartId);
-    } else {
-      // Generate a new cart ID if none exists
-      const newCartId = generateCartId();
-      localStorage.setItem("cart_id", newCartId);
-      setCartId(newCartId);
     }
   }, []);
-
-  // Generate a unique cart ID
-  const generateCartId = () => {
-    return "cart_" + Math.random().toString(36).substr(2, 9);
-  };
 
   return cartId;
 };

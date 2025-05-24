@@ -138,12 +138,14 @@ class CartApiView(generics.ListCreateAPIView):
             cart.cart_id = cart_id
 
             config_settings = ConfigSettings.objects.first()
-
-            if config_settings.service_fee_charge_type == "percentage":
-                service_fee_percentage = config_settings.service_fee_percentage / 100 
-                cart.service_fee = Decimal(service_fee_percentage) * cart.sub_total
+            if config_settings:
+                if config_settings.service_fee_charge_type == "percentage":
+                    service_fee_percentage = config_settings.service_fee_percentage / 100 
+                    cart.service_fee = Decimal(service_fee_percentage) * cart.sub_total
+                else:
+                    cart.service_fee = config_settings.service_fee_flat_rate
             else:
-                cart.service_fee = config_settings.service_fee_flat_rate
+                cart.service_fee = Decimal('0.00')
 
             cart.total = cart.sub_total + cart.shipping_amount + cart.service_fee + cart.tax_fee
             cart.save()
@@ -164,17 +166,19 @@ class CartApiView(generics.ListCreateAPIView):
             cart.cart_id = cart_id
 
             config_settings = ConfigSettings.objects.first()
-
-            if config_settings.service_fee_charge_type == "percentage":
-                service_fee_percentage = config_settings.service_fee_percentage / 100 
-                cart.service_fee = Decimal(service_fee_percentage) * cart.sub_total
+            if config_settings:
+                if config_settings.service_fee_charge_type == "percentage":
+                    service_fee_percentage = config_settings.service_fee_percentage / 100 
+                    cart.service_fee = Decimal(service_fee_percentage) * cart.sub_total
+                else:
+                    cart.service_fee = config_settings.service_fee_flat_rate
             else:
-                cart.service_fee = config_settings.service_fee_flat_rate
+                cart.service_fee = Decimal('0.00')
 
             cart.total = cart.sub_total + cart.shipping_amount + cart.service_fee + cart.tax_fee
             cart.save()
 
-            return Response( {"message": "Cart Created Successfully"}, status=status.HTTP_201_CREATED)
+            return Response({"message": "Cart Created Successfully"}, status=status.HTTP_201_CREATED)
 
 
 class CartListView(generics.ListAPIView):

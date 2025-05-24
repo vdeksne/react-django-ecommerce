@@ -15,7 +15,10 @@ function StoreHeader() {
     state.user,
   ]);
 
-  console.log("user().vendor_id", user().vendor_id);
+  // Only log vendor_id if user is logged in
+  if (isLoggedIn()) {
+    console.log("user().vendor_id", user().vendor_id);
+  }
 
   const navigate = useNavigate();
 

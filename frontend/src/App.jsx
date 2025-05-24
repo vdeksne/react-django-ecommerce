@@ -13,8 +13,8 @@ import Dashboard from "./views/auth/Dashboard";
 import StoreHeader from "./views/base/StoreHeader";
 import StoreFooter from "./views/base/StoreFooter";
 import Products from "./views/shop/Products"; // Add Products import
-// import ProductDetail from "./views/shop/ProductDetail";
-// import Cart from "./views/shop/Cart";
+import ProductDetail from "./views/shop/ProductDetail";
+import Cart from "./views/shop/Cart";
 // import Checkout from "./views/shop/Checkout";
 // import PaymentSuccess from "./views/shop/PaymentSuccess";
 // import Invoice from "./views/shop/Invoice";
@@ -80,6 +80,8 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/create-new-password" element={<CreatePassword />} />
+          <Route path="/detail/:slug" element={<ProductDetail />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
         <StoreFooter />
       </BrowserRouter>

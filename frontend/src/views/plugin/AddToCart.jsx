@@ -29,9 +29,9 @@ export const addToCart = async (
   try {
     setIsAddingToCart(true);
 
-    const response = await apiInstance.post("cart/", {
-      product_id,
-      user_id,
+    const response = await apiInstance.post("cart-view/", {
+      product: product_id,
+      user: user_id,
       qty,
       price,
       shipping_amount,
