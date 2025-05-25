@@ -256,13 +256,13 @@ SIMPLE_JWT = {
 
 
 JAZZMIN_SETTINGS = {
-    "site_title": "Desphixs",
-    "site_header": "Desphixs",
-    "site_brand": "Modern Marketplace ",
-    "site_icon": "images/favicon.ico",
-    "site_logo": "images/logos/logo.jpg",
-    "welcome_sign": "Welcome To Desphixs",
-    "copyright": "All right reserved to Desphixs",
+    "site_title": "Pax",
+    "site_header": "Pax",
+    "site_brand": "Pax",
+    # "site_icon": "images/favicon.ico",
+    # "site_logo": "images/logos/logo.jpg",
+    "welcome_sign": "Welcome To Pax",
+    "copyright": "All right reserved to Pax",
     "user_avatar": "images/photos/logo.jpg",
     "topmenu_links": [
         {"name": "Dashboard", "url": "home",

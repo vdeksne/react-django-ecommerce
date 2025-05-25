@@ -259,9 +259,12 @@ function Products() {
               </section>
               <section className="text-center">
                 <div className="row">
-                  {currentItems.map((product, index) => (
-                    <div className="col-lg-4 col-md-12 mb-4" key={index.id}>
-                      <div className="card">
+                  {currentItems.map((product) => (
+                    <div
+                      key={product.id}
+                      className="col-lg-4 col-md-6 col-sm-6 d-flex"
+                    >
+                      <div className="card w-100 my-2 shadow-2-strong">
                         <div
                           className="bg-image hover-zoom ripple"
                           data-mdb-ripple-color="light"
@@ -603,8 +606,8 @@ function Products() {
             <div className="album py-5 bg-light">
               <div className="container">
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                  {featuredProducts.map((product, index) => (
-                    <div className="col-lg-4 col-md-12 mb-4" key={index.id}>
+                  {featuredProducts.map((product) => (
+                    <div className="col-lg-4 col-md-12 mb-4" key={product.id}>
                       <div className="card">
                         <div
                           className="bg-image hover-zoom ripple"
@@ -627,7 +630,7 @@ function Products() {
                             </h5>
                           </a>
                           <a href="" className="text-reset">
-                            <p>{product?.brand.title}</p>
+                            <p>{product?.brand?.title || "No Brand"}</p>
                           </a>
                           <h6 className="mb-3">${product.price}</h6>
                           <button
