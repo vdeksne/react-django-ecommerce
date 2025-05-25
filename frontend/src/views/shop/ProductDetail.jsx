@@ -9,7 +9,6 @@ import GetCurrentAddress from "../plugin/UserCountry";
 import UserData from "../plugin/UserData";
 import CartID from "../plugin/cartID";
 import { addToCart } from "../plugin/AddToCart";
-
 import { addToWishlist } from "../plugin/addToWishlist";
 import { CartContext } from "../plugin/Context";
 import moment from "moment";
